@@ -92,3 +92,13 @@ jge A, B    ; jupm if greater or equal >=
 jl A, B     ; jupm if less <
 jle A, B    ; jupm if less or equal <=
 ```
+
+## PIE
+
+```asm
+; PIE
+; 1. compile with -fPIE
+; 2. link with -pie
+; 3. run with ASLR disabled
+; add `wrt ..plt` to libc function calls
+```

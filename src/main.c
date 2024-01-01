@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include "header.h"
 #include <errno.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 int main(void){
     char str[] = "Hello World!";
@@ -25,12 +27,29 @@ int main(void){
     printf("Compare: %d\n", ft_strcmp("Hell", ""));
 
 
-    printf("Write: %zu\n", ft_write(1, "Hello\n", 6));
-    printf("Write: %zu\n", ft_write(1, "\n", 1));
-    printf("Write: %zu\n", ft_write(1, "hello\nworld\n", 12));
-    printf("Write: %zu\n", ft_write(1, "Hello world\n", 12));
-    ft_write(5, "error", 5);
+    printf("Write: %zd\n", ft_write(1, "Hello\n", 6));
+    printf("Write: %zd\n", ft_write(1, "\n", 1));
+    printf("Write: %zd\n", ft_write(1, "hello\nworld\n", 12));
+    printf("Write: %zd\n", ft_write(1, "Hello world\n", 12));
+    ft_write(-5, "error", 5);
     perror("ft_write");
+
+    ft_write(1, "input: ", 7);
+    printf("Read: %zd\n", ft_read(0, str, 5));
+    printf("read: %s\n", str);
+    ft_read(-5, str, 5);
+    perror("ft_read");
+    const char * const_str = "Hello World!";
+    char * str1 = ft_strdup(const_str);
+    printf("Strdup: %s\n", str1);
+    printf("Strdup: %p\n", str1);
+    char * str2 = ft_strdup(const_str);
+    printf("Strdup: %s\n",str2);
+    printf("Strdup: %p\n",str2);
+    perror("ft_strdup");
+
+    free(str1);
+    free(str2);
 
     return 0;
 }

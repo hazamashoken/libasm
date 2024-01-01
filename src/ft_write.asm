@@ -6,12 +6,9 @@
 ; Output:
 ;   rax - number og byte to write
 section .text
-    SYS_WRITE equ 1
 
     global ft_write
     extern __errno_location
-
-
 
 ; Inputs:
 ;   rdi - file descriptor
@@ -20,17 +17,19 @@ section .text
 ; Output:
 ;   rax - number og byte to write
 ft_write:
-    MOV rax, SYS_WRITE
+    CALL __errno_location  wrt ..plt     ; call __errno_location
+	MOV byte [rax], 0              ; set errno to 0
+    MOV rax, 1
     SYSCALL
-    JC .syscall_error
-    RET
+    TEST rax, rax
+	JNS .return
 
 .syscall_error:						; set errno and return -1
-	neg rax                     ; negate return value
-	push rax                    ; save return value
-	call __errno_location       ; call __errno_location
-	mov rbx, rax                ; save errno address
-	pop rax                     ; restore return value
-	mov [rbx], rax              ; set errno
-	mov rax, -1                 ; return -1
+	NEG rax                     ; negate return value
+    MOV rdx, rax                 ; save return value
+	CALL __errno_location  wrt ..plt     ; call __errno_location
+	MOV [rax], rdx              ; set errno
+	OR rax, -1                 ; return -1
+
+.return:
 	RET
