@@ -6,7 +6,6 @@
 
 int main(void){
     char str[] = "Hello World!";
-    int result;
 
     printf("Dst before: %s\n", str);
     printf("Src after: %s\n", ft_strcpy(str, "It's me"));
