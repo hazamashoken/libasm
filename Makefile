@@ -23,6 +23,7 @@ SRC =	ft_strlen.s \
 BONUS_SRC = ft_atoi_base_bonus.s
 
 MAIN = main.c
+BONUS_MAIN = bonus.c
 
 # AS compiler
 AS = $(V)nasm
@@ -30,7 +31,7 @@ ASFLAGS = -f elf64
 
 # C compiler
 CC = $(V)clang
-CFLAGS = -Wall -Wextra -Werror -MMD -MP
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
 
 # Linker
 LINKER = ar rcs
@@ -45,6 +46,7 @@ RM = rm -f
 SRCS = $(addprefix $(DIR)/, $(SRC))
 MAIN_SRCS = $(addprefix $(DIR)/, $(MAIN))
 BONUS_SRCS = $(addprefix $(BONUS_DIR)/, $(BONUS_SRC))
+BONUS_MAIN_SRCS = $(addprefix $(BONUS_DIR)/, $(BONUS_MAIN))
 
 LIB = $(DIR)/$(LIB_NAME)
 BONUS_LIB = $(BONUS_DIR)/$(LIB_NAME)
@@ -53,6 +55,7 @@ ASM_OBJ = $(SRCS:.s=.o)
 C_OBJ = $(MAIN_SRCS:.c=.o)
 OBJ = $(ASM_OBJ) $(C_OBJ)
 BONUS_OBJ = $(BONUS_SRCS:.s=.o) $(OBJ)
+BONUS_C_OBJ = $(BONUS_MAIN_SRCS:.c=.o)
 
 # Dependency
 DEPEND = $(MAIN_SRCS:.c=.d)
@@ -75,8 +78,8 @@ $(NAME): $(LIB)
 	$(V)$(CC) -o $(NAME) -lasm $(C_OBJ) $(LIB)
 	$(V)echo "Mandatory done"
 
-$(BONUS): $(BONUS_LIB)
-	$(V)$(CC) -o $(BONUS) -D BONUS=1 -lasm $(MAIN_SRCS) $(BONUS_LIB)
+$(BONUS): $(BONUS_LIB) $(BONUS_C_OBJ)
+	$(V)$(CC) -o $(BONUS) -D BONUS=1 -lasm $(C_OBJ) $(BONUS_C_OBJ) $(BONUS_LIB)
 	$(V)echo "Bonus done"
 
 $(LIB): $(OBJ)

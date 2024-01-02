@@ -3,6 +3,7 @@
 
 
 # include <stdlib.h>
+# include "../header.h"
 
 typedef struct  s_list
 {

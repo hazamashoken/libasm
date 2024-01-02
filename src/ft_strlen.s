@@ -8,15 +8,15 @@ section .text
 ; rdi - const char *str
 ; rax - len (return value)
 ft_strlen:
-    XOR rax, rax ; len = 0
-    JMP .loop
+                XOR     rax, rax                ; len = 0
+                JMP     .loop
 
 .loop_inc:
-    ADD rax, 1
+                ADD     rax, 1
 
-.loop:                 ;
-    CMP byte [rdi + rax], 0 ; while (*(str + len) != '\0') {
-    JNZ .loop_inc
+.loop:
+                CMP      byte [rdi + rax], 0    ; while (*(str + len) != '\0') {
+                JNZ     .loop_inc
 
 .return:
-    RET
+                RET

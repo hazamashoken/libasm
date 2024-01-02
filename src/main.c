@@ -1,13 +1,7 @@
 #include "header.h"
-#include <stdio.h>
-#include <errno.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
 
-int failed = 0;
-int test_count = 0;
+int failed;
+int test_count;
 
 void test_strlen(const char * str)
 {
@@ -87,13 +81,19 @@ void test_strdup(const char *str)
 
 void test_write(int fd, const void *buf, size_t count)
 {
+    char *error;
+    char *ft_error;
     test_count++;
     write(1, "ft_write: >", 12);
     ssize_t ft_write_size = ft_write(fd, buf, count);
+    ft_error = strerror(errno);
+    printf("\n%s %d\n", ft_error, errno);
     write(1, "<\nwrite: >", 11);
     ssize_t write_size = write(fd, buf, count);
+    error = strerror(errno);
+    printf("\n%s %d\n", error, errno);
     write(1, "<\n", 2);
-    if (ft_write_size == write_size)
+    if (ft_write_size == write_size && strcmp(ft_error, error) == 0)
         printf("ft_write: \x1b[32mOK\n\n");
     else
     {
@@ -103,6 +103,34 @@ void test_write(int fd, const void *buf, size_t count)
     printf("fd: %d\n", fd);
     printf("buf: %s\n", (char *)buf);
     printf("count: %lu\n", count);
+    printf("write: %ld\n", write_size);
+    printf("ft_write: %ld\033[0m\n\n", ft_write_size);
+}
+
+void test_bad_write(void)
+{
+    char *error;
+    char *ft_error;
+    test_count++;
+    write(1, "ft_write: >", 12);
+    ssize_t ft_write_size = ft_write(-1, "Hello", 5);
+    ft_error = strerror(errno);
+    printf("\n%s %d\n", ft_error, errno);
+    write(1, "<\nwrite: >", 11);
+    ssize_t write_size = write(-1, "Hello", 5);
+    error = strerror(errno);
+    printf("\n%s %d\n", error, errno);
+    write(1, "<\n", 2);
+    if (ft_write_size == write_size)
+        printf("ft_write: \x1b[32mOK\n\n");
+    else
+    {
+        printf("ft_write: \x1b[31mKO\n\n");
+        failed++;
+    }
+    printf("fd: %d\n", -1);
+    printf("buf: %s\n", "Hello");
+    printf("count: %d\n", 5);
     printf("write: %ld\n", write_size);
     printf("ft_write: %ld\033[0m\n\n", ft_write_size);
 }
@@ -137,6 +165,8 @@ void test_read(const char* filepath, size_t file_size)
     free(ft_buf);
     free(buf);
 }
+
+
 
 int main(void){
    // testing ft_strlen
@@ -180,6 +210,7 @@ int main(void){
     test_write(1, "Hello World!", 13);
     test_write(1, ">       <", 11);
     test_write(1, "", 1);
+    test_bad_write();
 
     // testing read
     // creating mock files
@@ -223,14 +254,11 @@ int main(void){
     test_fd_3 = open(".test_file_3.txt", O_RDONLY);
     test_read(".test_file_3.txt", 1);
     close(test_fd_3);
-    unlink(".test_file_3.txt"); 
-    
-    // test_read(0, 100);
+    unlink(".test_file_3.txt");
+
+    test_bonus();
 
     // Pass or fail
-    printf("%d\n", BONUS);
-    if (BONUS)
-        printf("\x1b[33mBonus part is not implemented yet!\033[0m\n");
     if (failed == 0)
         printf("\x1b[32mAll Mandatory tests passed! [%d/%d]\033[0m\n", test_count - failed, test_count);
     else

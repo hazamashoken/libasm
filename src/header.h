@@ -3,10 +3,19 @@
 
 #include <stddef.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+
 
 
 # ifndef BONUS
 #  define BONUS 0
+    void test_bonus(void){};
+# else
+    void test_bonus(void);
 # endif
 
 size_t ft_strlen(const char *s);
