@@ -17,19 +17,24 @@ section .text
 ; Output:
 ;   rax - number og byte to write
 ft_write:
-    CALL __errno_location  wrt ..plt     ; call __errno_location
-	MOV byte [rax], 0              ; set errno to 0
+    PUSH r12
+
     MOV rax, 1
     SYSCALL
-    TEST rax, rax
-	JNS .return
+    MOV r12, rax
 
-.syscall_error:						; set errno and return -1
-	NEG rax                     ; negate return value
-    MOV rdx, rax                 ; save return value
+.call_errno:
 	CALL __errno_location  wrt ..plt     ; call __errno_location
-	MOV [rax], rdx              ; set errno
+	MOV byte [rax], 0              ; set errno
+    TEST r12, r12
+    JZ .set_error
+
+    MOV rax, r12
+    JMP .return
+
+.set_error:						; set errno and return -1
 	OR rax, -1                 ; return -1
 
 .return:
+    POP r12
 	RET

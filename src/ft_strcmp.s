@@ -20,16 +20,16 @@ ft_strcmp:
     MOV al, byte [rdi]  ; mov and convert value to char
     MOV cl, byte [rsi]
     CMP al, 0           ; check if value is '\0'
-    JE .exit
+    JE .return
     CMP cl, 0
-    JE .exit
+    JE .return
     CMP al, cl          ; check if value is not equal
-    JNE .exit
+    JNE .return
 
     ADD rdi, 1          ; move pointer
     ADD rsi, 1
     JMP .loop
 
-.exit:
+.return:
     SUB eax, ecx        ; get the different in dword size
     RET

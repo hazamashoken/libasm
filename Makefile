@@ -76,7 +76,7 @@ $(NAME): $(LIB)
 	$(V)echo "Mandatory done"
 
 $(BONUS): $(BONUS_LIB)
-	$(V)$(CC) -o $(BONUS) -lasm $(C_OBJ) $(BONUS_LIB)
+	$(V)$(CC) -o $(BONUS) -D BONUS=1 -lasm $(MAIN_SRCS) $(BONUS_LIB)
 	$(V)echo "Bonus done"
 
 $(LIB): $(OBJ)

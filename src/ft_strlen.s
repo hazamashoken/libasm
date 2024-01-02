@@ -9,12 +9,14 @@ section .text
 ; rax - len (return value)
 ft_strlen:
     XOR rax, rax ; len = 0
+    JMP .loop
+
+.loop_inc:
+    ADD rax, 1
 
 .loop:                 ;
     CMP byte [rdi + rax], 0 ; while (*(str + len) != '\0') {
-    JZ .exit
-    ADD rax, 1               ; len += 1
-    JMP .loop
+    JNZ .loop_inc
 
-.exit:
+.return:
     RET
