@@ -3,6 +3,8 @@
         "errno.h": "c",
         "list.h": "c",
         "header.h": "c",
-        "random": "c"
+        "random": "c",
+        "bitset": "c",
+        "list_bonus.h": "c"
     }
 }

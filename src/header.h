@@ -12,7 +12,8 @@
 
 # ifndef BONUS
 #  define BONUS 0
-    void test_bonus(int * a, int* b){
+    void test_bonus(int * a, int* b)
+    {
         (void)a;
         (void)b;
     };

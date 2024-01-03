@@ -32,6 +32,9 @@ rdi, rsi ,rdx, rcx, r8, r9
 
 ## System calls
 
+eflags will be set based on the result of the system call
+no need to compare to set flag again
+
 ```asm
 mov rax, 1 ; system call number
 mov rdi, 1 ; first argument
@@ -111,4 +114,82 @@ jnz A         ; jump if zero flag is not set
 ; 2. link with -pie
 ; 3. run with ASLR disabled
 ; add `wrt ..plt` to libc function calls
+```
+
+# Debugging with gdb
+Make sure you compile with `-g` flag
+
+```bash
+gdb ./a.out # start gdb
+
+# set breakpoint
+break <func> # or b <func>
+
+# run
+run # or r
+
+# enable tui mode
+tui enable # or tui e
+layout regs # recommended
+
+# step into
+step # or s
+
+# step over
+next # or n
+
+# continue
+continue # or c
+
+# see all registers
+info registers # or i r
+
+# see some registers
+info registers rax rbx rcx rdx # or i r rax rbx rcx rdx
+
+# see memory
+x/x $rsp # or x/x $sp
+
+# see memory as char
+x/c $rsp # or x/c $sp
+
+# see memory as string
+x/s $rsp # or x/s $sp
+
+# see memory as 32-bit
+x/w $rsp # or x/w $sp
+
+# see memory as 16-bit
+x/h $rsp # or x/h $sp
+
+# see memory as 8-bit
+x/b $rsp # or x/b $sp
+
+# see memory as 64-bit
+x/g $rsp # or x/g $sp
+
+# see memory as pointer
+x/gx $rsp # or x/gx $sp
+
+# see memory as float
+x/f $rsp # or x/f $sp
+
+# see memory as double
+x/d $rsp # or x/d $sp
+
+# see memory as quad
+x/t $rsp # or x/t $sp
+
+# see memory as octal
+x/o $rsp # or x/o $sp
+
+# see memory as binary
+x/a $rsp # or x/a $sp
+
+# see memory as address
+x/i $rsp # or x/i $sp
+
+# see multiple memory
+x/10x $rsp # or x/10x $sp
+
 ```

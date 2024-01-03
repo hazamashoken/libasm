@@ -1,5 +1,5 @@
 # Verbose: @ = no verbose,  = verbose
-V =
+V = @
 
 # Name of the executable
 NAME =  asmr
@@ -24,11 +24,11 @@ BONUS_SRC = ft_atoi_base_bonus.s \
 			ft_list_push_front_bonus.s \
 			ft_list_size_bonus.s \
 			ft_list_sort_bonus.s \
-			# ft_list_remove_if_bonus.s
+			ft_list_remove_if_bonus.s \
 
 MAIN = main.c
-BONUS_MAIN = bonus.c \
-			ft_list_sort.c
+BONUS_MAIN = _bonus.c \
+
 
 # AS compiler
 AS = $(V)nasm
@@ -36,15 +36,13 @@ ASFLAGS = -f elf64
 
 # C compiler
 CC = $(V)clang
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -g
+CFLAGS = -Wall -Wextra -Werror -MMD -MP
 
 # Linker
 LINKER = ar rcs
 
 # Remove
 RM = rm -f
-
-
 
 # Do not change
 # these are the files that will be compiled
@@ -61,18 +59,18 @@ C_OBJ = $(MAIN_SRCS:.c=.o)
 BONUS_C_OBJ = $(BONUS_MAIN_SRCS:.c=.o) $(C_OBJ)
 BONUS_ASM_OBJ = $(BONUS_SRCS:.s=.o)
 OBJ = $(ASM_OBJ) $(C_OBJ)
-BONUS_OBJ =  $(ASM_OBJ) $(C_OBJ) $(BONUS_C_OBJ) $(BONUS_ASM_OBJ)
+BONUS_OBJ =  $(BONUS_C_OBJ) $(BONUS_ASM_OBJ)
 
 # Dependency
-DEPEND = $(MAIN_SRCS:.c=.d)
+DEPEND = $(MAIN_SRCS:.c=.d) $(BONUS_MAIN_SRCS:.c=.d)
 
 
 # Rules
 .PHONY: all
-all: $(NAME)
+all: lib #$(NAME)
 
 .PHONY: bonus
-bonus: $(BONUS)
+bonus: lib_bonus # $(BONUS)
 
 .PHONY: lib
 lib: $(LIB)
@@ -80,12 +78,20 @@ lib: $(LIB)
 .PHONY: lib_bonus
 lib_bonus: $(BONUS_LIB)
 
+.PHONY: test
+test: $(NAME)
+	$(V)./$(NAME)
+
+.PHONY: test_bonus
+test_bonus: $(BONUS)
+	$(V)./$(BONUS)
+
 $(NAME): $(LIB)
-	$(V)$(CC) $(CFLAGS) -o $(NAME) -lasm $(MAIN_SRCS) $(LIB)
+	$(V)$(CC) -o $(NAME) -lasm $(MAIN_SRCS) $(LIB)
 	$(V)echo "Mandatory done"
 
 $(BONUS): $(BONUS_LIB)
-	$(V)$(CC) $(CFLAGS) -o $(BONUS) -D BONUS=1 -lasm $(BONUS_MAIN_SRCS) $(MAIN_SRCS) $(BONUS_LIB)
+	$(V)$(CC) -o $(BONUS) -D BONUS=1 -lasm $(BONUS_MAIN_SRCS) $(MAIN_SRCS) $(BONUS_LIB)
 	$(V)echo "Bonus done"
 
 $(LIB): $(OBJ)
@@ -100,7 +106,7 @@ $(BONUS_LIB): $(ASM_OBJ) $(BONUS_ASM_OBJ)
 
 .PHONY: clean
 clean:
-	$(V)$(RM) $(OBJ) $(DEPEND)
+	$(V)$(RM) $(OBJ) $(DEPEND) $(BONUS_OBJ)
 	$(V)echo "Clean done"
 
 .PHONY: fclean

@@ -2,13 +2,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-section .data
-    struc s_list
-        .data:   resq    1
-        .next:   resq    1
-    endstruc
-
-    t_list_size     equ     $ - s_list
+struc t_list
+    .data:   resq    1
+    .next:   resq    1
+endstruc
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;
@@ -34,9 +31,9 @@ ft_list_push_front:
                 JZ     .call_errno                      ;   set errno
 
 .set_data:
-                MOV     [rax], rsi                  ; elem->data = data
+                MOV     [rax + t_list.data], rsi                  ; elem->data = data
                 MOV     rcx, [rdi]
-                MOV     [rax + 8], rcx              ; elem->next = *begin_list
+                MOV     [rax + t_list.next], rcx              ; elem->next = *begin_list
                 MOV     [rdi], rax                    ; *begin_list = elem ?
 
 .call_errno:

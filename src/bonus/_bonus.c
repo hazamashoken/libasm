@@ -39,7 +39,6 @@ void test_atoi_base(char *str, char *base, int expected)
     printf("ft_atoi_base: %d\033[0m\n\n", ret);
 }
 
-
 void test_list_push_front(t_list **list, char *str)
 {
     bonus_test_count++;
@@ -83,29 +82,63 @@ void test_list_size(t_list *list)
     }
     printf("list size: %d\n", size);
     printf("ft_list_size: %d\033[0m\n\n", ret);
-
 }
 
 void test_list_sort(t_list **list)
 {
+    t_list *tmp = *list;
     bonus_test_count++;
-    ft_list_sort(list, ft_strcmp);
+    while (tmp)
+    {
+        // check if data is sorted
+        printf("list->data: %s\n", (char *)(tmp)->data);
+        tmp = tmp->next;
+    }
+    tmp = *list;
+    printf("\n\nsorting ...\n\n");
+    ft_list_sort(list, strcmp);
+    while (tmp)
+    {
+        // check if data is sorted
+        printf("list->data: %s\n", (char *)(tmp)->data);
+        tmp = tmp->next;
+    }
     while ((*list)->next)
     {
         // check if data is sorted
-        if (ft_strcmp((*list)->data, (*list)->next->data) > 0)
+        if (strcmp((*list)->data, (*list)->next->data) > 0)
         {
-            printf("ft_list_sort: \x1b[31mKO\n\n");
+            printf("ft_list_sort: \x1b[31mKO\x1b[0m\n\n");
             bonus_failed++;
             return ;
         }
-        printf("list->data: %s\n", (char *)(*list)->data);
         list = &(*list)->next;
     }
-    printf("ft_list_sort: \x1b[32mOK\n\n");
-
+    printf("ft_list_sort: \x1b[32mOK\x1b[0m\n\n");
 }
 
+void test_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(void *,void *), void (*free_fct)(void *))
+{
+    bonus_test_count++;
+    ft_list_remove_if(begin_list, data_ref, cmp, free_fct);
+    while (*begin_list)
+    {
+        printf("list->data: %s\n", (char *)(*begin_list)->data);
+        if ((*cmp)((*begin_list)->data, data_ref) == 0)
+        {
+            printf("ft_list_remove_if: \x1b[31mKO\x1b[0m\n\n");
+            bonus_failed++;
+            return ;
+        }
+        begin_list = &(*begin_list)->next;
+    }
+    printf("ft_list_remove_if: \x1b[32mOK\x1b[0m\n\n");
+}
+
+int strcmp_wrapper(void *a, void *b)
+{
+    return strcmp((char *)a, (char *)b);
+}
 
 void test_bonus(int *test_count, int *test_failed)
 {
@@ -129,9 +162,9 @@ void test_bonus(int *test_count, int *test_failed)
 
         // test list_push_front
         t_list *list = NULL;
+        test_list_push_front(&list, "1");
         test_list_push_front(&list, "0");
         test_list_push_front(&list, "2");
-        test_list_push_front(&list, "1");
         test_list_push_front(&list, "3");
         test_list_push_front(&list, "4");
 
@@ -142,6 +175,25 @@ void test_bonus(int *test_count, int *test_failed)
 
         test_list_sort(&list);
 
+        // should not crash
+        t_list *null_list = NULL;
+
+        ft_list_sort(&list, NULL);
+        ft_list_sort(&null_list, NULL);
+        ft_list_sort(NULL, NULL);
+
+        printf("NULL list test: \x1b[32mOK\n\n");
+
+        // test list_remove_if
+        t_list *list_remove_if = NULL;
+        ft_list_push_front(&list_remove_if, strdup("1"));
+        ft_list_push_front(&list_remove_if, strdup("2"));
+        ft_list_push_front(&list_remove_if, strdup("1"));
+        ft_list_push_front(&list_remove_if, strdup("3"));
+        ft_list_push_front(&list_remove_if, strdup("4"));
+        ft_list_push_front(&list_remove_if, strdup("5"));
+
+        test_list_remove_if(&list_remove_if, "1", strcmp_wrapper, free);
 
         *test_count += bonus_test_count;
         *test_failed += bonus_failed;
