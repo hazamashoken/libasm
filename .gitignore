@@ -2,3 +2,4 @@
 *.d
 asmr
 bonus_asmr
+libasm.a

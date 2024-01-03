@@ -2,10 +2,14 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;
 
-struc s_list
-    data:   resq    1
-    next:   resq    1
-endstruc
+section .data
+    struc s_list
+        .data:   resq    1
+        .next:   resq    1
+    endstruc
+
+    t_list_size     equ     $ - s_list
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -15,7 +19,7 @@ section .text
     extern __errno_location
 
 ;   Inputs: rdi - **begin_list
-;           rsi - *data  
+;           rsi - *data
 ft_list_push_front:
                 PUSH    rdi                         ; begin
                 PUSH    rsi                         ; data

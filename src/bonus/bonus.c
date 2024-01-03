@@ -40,9 +40,8 @@ void test_atoi_base(char *str, char *base, int expected)
 }
 
 
-void test_list_push_front(t_list **list)
+void test_list_push_front(t_list **list, char *str)
 {
-    char *str = "test";
     bonus_test_count++;
     printf("before: %p\n",*list);
     ft_list_push_front(list, str);
@@ -87,6 +86,27 @@ void test_list_size(t_list *list)
 
 }
 
+void test_list_sort(t_list **list)
+{
+    bonus_test_count++;
+    ft_list_sort(list, ft_strcmp);
+    while ((*list)->next)
+    {
+        // check if data is sorted
+        if (ft_strcmp((*list)->data, (*list)->next->data) > 0)
+        {
+            printf("ft_list_sort: \x1b[31mKO\n\n");
+            bonus_failed++;
+            return ;
+        }
+        printf("list->data: %s\n", (char *)(*list)->data);
+        list = &(*list)->next;
+    }
+    printf("ft_list_sort: \x1b[32mOK\n\n");
+
+}
+
+
 void test_bonus(int *test_count, int *test_failed)
 {
         // test atoi_base
@@ -101,6 +121,7 @@ void test_bonus(int *test_count, int *test_failed)
         test_atoi_base("-0", "0123456789", 0);
         test_atoi_base("-1", "0123456789", -1);
         test_atoi_base("-42", "0123456789", -42);
+        test_atoi_base("a", "0123456789abcdef", 10);
         test_atoi_base("123", "+", 0);
         test_atoi_base("123", " 0123456789", 0);
         test_atoi_base("123", "0123456789+", 0);
@@ -108,14 +129,19 @@ void test_bonus(int *test_count, int *test_failed)
 
         // test list_push_front
         t_list *list = NULL;
-        test_list_push_front(&list);
-        test_list_push_front(&list);
-        test_list_push_front(&list);
+        test_list_push_front(&list, "0");
+        test_list_push_front(&list, "2");
+        test_list_push_front(&list, "1");
+        test_list_push_front(&list, "3");
+        test_list_push_front(&list, "4");
 
         // test list_size
         test_list_size(list);
         test_list_size(NULL);
-        
+
+
+        test_list_sort(&list);
+
 
         *test_count += bonus_test_count;
         *test_failed += bonus_failed;

@@ -83,7 +83,10 @@ pop rax  ; pop eax from the stack
 
 
 ## Jump instructions
-
+```asm
+jmp A       ; jump to A
+```
+### Comparison jump
 ```asm
 je A, B     ; jupm if equal ==
 jne A, B    ; jupm if not equal !=
@@ -91,6 +94,13 @@ jg A, B     ; jupm if greater >
 jge A, B    ; jupm if greater or equal >=
 jl A, B     ; jupm if less <
 jle A, B    ; jupm if less or equal <=
+```
+
+### Test jump
+```asm
+test rax, rbx ; set flags based on rax & rbx
+jz A          ; jump if zero flag is set
+jnz A         ; jump if zero flag is not set
 ```
 
 ## PIE

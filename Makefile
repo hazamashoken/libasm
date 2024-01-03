@@ -23,11 +23,12 @@ SRC =	ft_strlen.s \
 BONUS_SRC = ft_atoi_base_bonus.s \
 			ft_list_push_front_bonus.s \
 			ft_list_size_bonus.s \
-			# ft_list_sort_bonus.s \
-			ft_list_remove_if_bonus.s
+			ft_list_sort_bonus.s \
+			# ft_list_remove_if_bonus.s
 
 MAIN = main.c
-BONUS_MAIN = bonus.c
+BONUS_MAIN = bonus.c \
+			ft_list_sort.c
 
 # AS compiler
 AS = $(V)nasm
@@ -57,9 +58,10 @@ BONUS_LIB = $(BONUS_DIR)/$(LIB_NAME)
 
 ASM_OBJ = $(SRCS:.s=.o)
 C_OBJ = $(MAIN_SRCS:.c=.o)
-BONUS_OBJ = $(BONUS_SRCS:.s=.o)
 BONUS_C_OBJ = $(BONUS_MAIN_SRCS:.c=.o) $(C_OBJ)
-OBJ = $(ASM_OBJ) $(C_OBJ) $(BONUS_C_OBJ) $(BONUS_OBJ)
+BONUS_ASM_OBJ = $(BONUS_SRCS:.s=.o)
+OBJ = $(ASM_OBJ) $(C_OBJ)
+BONUS_OBJ =  $(ASM_OBJ) $(C_OBJ) $(BONUS_C_OBJ) $(BONUS_ASM_OBJ)
 
 # Dependency
 DEPEND = $(MAIN_SRCS:.c=.d)
@@ -91,8 +93,8 @@ $(LIB): $(OBJ)
 	$(V)ranlib $(LIB)
 	$(V)echo "Lib done"
 
-$(BONUS_LIB): $(BONUS_OBJ)
-	$(V)$(LINKER) $(BONUS_LIB) $(ASM_OBJ) $(BONUS_OBJ)
+$(BONUS_LIB): $(ASM_OBJ) $(BONUS_ASM_OBJ)
+	$(V)$(LINKER) $(BONUS_LIB) $(ASM_OBJ) $(BONUS_ASM_OBJ)
 	$(V)ranlib $(BONUS_LIB)
 	$(V)echo "Bonus lib done"
 
