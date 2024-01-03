@@ -1,5 +1,5 @@
 # Verbose: @ = no verbose,  = verbose
-V = @
+V =
 
 # Name of the executable
 NAME =  asmr
@@ -20,7 +20,11 @@ SRC =	ft_strlen.s \
 		ft_read.s \
 		ft_strdup.s
 
-BONUS_SRC = ft_atoi_base_bonus.s
+BONUS_SRC = ft_atoi_base_bonus.s \
+			ft_list_push_front_bonus.s \
+			ft_list_size_bonus.s \
+			# ft_list_sort_bonus.s \
+			ft_list_remove_if_bonus.s
 
 MAIN = main.c
 BONUS_MAIN = bonus.c
@@ -53,9 +57,9 @@ BONUS_LIB = $(BONUS_DIR)/$(LIB_NAME)
 
 ASM_OBJ = $(SRCS:.s=.o)
 C_OBJ = $(MAIN_SRCS:.c=.o)
-OBJ = $(ASM_OBJ) $(C_OBJ)
-BONUS_OBJ = $(BONUS_SRCS:.s=.o) $(OBJ)
-BONUS_C_OBJ = $(BONUS_MAIN_SRCS:.c=.o)
+BONUS_OBJ = $(BONUS_SRCS:.s=.o)
+BONUS_C_OBJ = $(BONUS_MAIN_SRCS:.c=.o) $(C_OBJ)
+OBJ = $(ASM_OBJ) $(C_OBJ) $(BONUS_C_OBJ) $(BONUS_OBJ)
 
 # Dependency
 DEPEND = $(MAIN_SRCS:.c=.d)
@@ -75,11 +79,11 @@ lib: $(LIB)
 lib_bonus: $(BONUS_LIB)
 
 $(NAME): $(LIB)
-	$(V)$(CC) -o $(NAME) -lasm $(C_OBJ) $(LIB)
+	$(V)$(CC) $(CFLAGS) -o $(NAME) -lasm $(MAIN_SRCS) $(LIB)
 	$(V)echo "Mandatory done"
 
-$(BONUS): $(BONUS_LIB) $(BONUS_C_OBJ)
-	$(V)$(CC) -o $(BONUS) -D BONUS=1 -lasm $(C_OBJ) $(BONUS_C_OBJ) $(BONUS_LIB)
+$(BONUS): $(BONUS_LIB)
+	$(V)$(CC) $(CFLAGS) -o $(BONUS) -D BONUS=1 -lasm $(BONUS_MAIN_SRCS) $(MAIN_SRCS) $(BONUS_LIB)
 	$(V)echo "Bonus done"
 
 $(LIB): $(OBJ)
@@ -94,7 +98,7 @@ $(BONUS_LIB): $(BONUS_OBJ)
 
 .PHONY: clean
 clean:
-	$(V)$(RM) $(BONUS_OBJ) $(DEPEND)
+	$(V)$(RM) $(OBJ) $(DEPEND)
 	$(V)echo "Clean done"
 
 .PHONY: fclean
@@ -106,5 +110,5 @@ fclean: clean
 .PHONY: re
 re: fclean all
 
-.PHONY: re
+.PHONY: re-bonus
 re-bonus: fclean bonus

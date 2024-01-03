@@ -1,11 +1,11 @@
 ; char *ft_strdup(const char *s);
-global ft_strdup
-extern malloc
-extern ft_strlen
-extern ft_strcpy
-extern __errno_location
-
 section .text
+    global ft_strdup
+    extern malloc
+    extern ft_strlen
+    extern ft_strcpy
+    extern __errno_location
+
 ; Input: rdi - pointer to string to be copy
 ; Output: rax - pointer to new allocated pointer with copied value from rdi
 ; Preserved:

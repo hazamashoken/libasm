@@ -1,7 +1,8 @@
 #include "header.h"
 
-int failed;
-int test_count;
+
+int failed = 0;
+int test_count = 0;
 
 void test_strlen(const char * str)
 {
@@ -169,6 +170,8 @@ void test_read(const char* filepath, size_t file_size)
 
 
 int main(void){
+    int bonus_test_count = 0;
+    int bonus_failed = 0;
    // testing ft_strlen
     test_strlen("");
     test_strlen("Hello");
@@ -256,13 +259,21 @@ int main(void){
     close(test_fd_3);
     unlink(".test_file_3.txt");
 
-    test_bonus();
-
+    test_bonus(&bonus_test_count, &bonus_failed);
+    
     // Pass or fail
     if (failed == 0)
         printf("\x1b[32mAll Mandatory tests passed! [%d/%d]\033[0m\n", test_count - failed, test_count);
     else
         printf("\x1b[31mSome tests failed! [%d/%d]\033[0m\n", test_count - failed, test_count);
-
+    if (BONUS)
+    {
+        if (bonus_failed == 0)
+            printf("\x1b[32mAll Bonus tests passed! [%d/%d]\033[0m\n", bonus_test_count - bonus_failed, bonus_test_count);
+        else
+            printf("\x1b[31mBonus tests failed! [%d/%d]\033[0m\n", bonus_test_count - bonus_failed, bonus_test_count);
+    }
+    if (failed || bonus_failed)
+        return 1;
     return 0;
 }

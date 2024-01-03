@@ -10,12 +10,15 @@
 #include <fcntl.h>
 
 
-
 # ifndef BONUS
 #  define BONUS 0
-    void test_bonus(void){};
-# else
-    void test_bonus(void);
+    void test_bonus(int * a, int* b){
+        (void)a;
+        (void)b;
+    };
+#  else
+#   include "bonus/list_bonus.h"
+    void test_bonus(int * a, int* b);
 # endif
 
 size_t ft_strlen(const char *s);

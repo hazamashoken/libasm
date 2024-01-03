@@ -4,9 +4,9 @@
 ;   rsi - char *base: the string of number base rdi is based on
 ; OutPut:
 ;   rax - the integer value of the string number
-global ft_atoi_base
 
 section .text
+    global ft_atoi_base
 ; Inputs:
 ;   rdi - char *str: the string of number
 ;   rsi - char *base: the string of number base rdi is based on

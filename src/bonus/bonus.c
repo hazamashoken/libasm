@@ -1,13 +1,13 @@
 
-# include "list.h"
+# include "../header.h"
+# include "list_bonus.h"
 
-int failed;
-int test_count;
-
+int bonus_test_count = 0;
+int bonus_failed = 0;
 
 void test_atoi_base_10(char *str)
 {
-    test_count++;
+    bonus_test_count++;
     int ret = ft_atoi_base(str, "0123456789");
     int atoi_base = atoi(str);
     if (ret == atoi_base)
@@ -15,7 +15,7 @@ void test_atoi_base_10(char *str)
     else
     {
         printf("ft_atoi_base 10: \x1b[31mKO\n\n");
-        failed++;
+        bonus_failed++;
     }
     printf("str: %s\n", str);
     printf("atoi_base: %d\n", atoi_base);
@@ -24,14 +24,14 @@ void test_atoi_base_10(char *str)
 
 void test_atoi_base(char *str, char *base, int expected)
 {
-    test_count++;
+    bonus_test_count++;
     int ret = ft_atoi_base(str, base);
     if (ret == expected)
         printf("ft_atoi_base: \x1b[32mOK\n\n");
     else
     {
         printf("ft_atoi_base: \x1b[31mKO\n\n");
-        failed++;
+        bonus_failed++;
     }
     printf("str: %s\n", str);
     printf("base: %s\n", base);
@@ -39,8 +39,57 @@ void test_atoi_base(char *str, char *base, int expected)
     printf("ft_atoi_base: %d\033[0m\n\n", ret);
 }
 
-void test_bonus(void)
+
+void test_list_push_front(t_list **list)
 {
+    char *str = "test";
+    bonus_test_count++;
+    printf("before: %p\n",*list);
+    ft_list_push_front(list, str);
+    printf("after: %p\n\n",*list);
+    if (!list)
+    {
+        printf("ft_list_push_front: \x1b[31mKO\n\n");
+        printf("failed to malloc\n\n");
+        bonus_failed++;
+        return ;
+    }
+    if (*list && !strcmp((*list)->data, str))
+        printf("ft_list_push_front: \x1b[32mOK\n\n");
+    else
+    {
+        printf("ft_list_push_front: \x1b[31mKO\n\n");
+        bonus_failed++;
+    }
+    printf("list->data: %s\n", (char *)(*list)->data);
+    printf("list->next: %p\033[0m\n\n", (*list)->next);
+}
+
+void test_list_size(t_list *list)
+{
+    bonus_test_count++;
+    int ret = ft_list_size(list);
+    int size = 0;
+    while (list)
+    {
+        size++;
+        list = list->next;
+    }
+    if (ret == size)
+        printf("ft_list_size: \x1b[32mOK\n\n");
+    else
+    {
+        printf("ft_list_size: \x1b[31mKO\n\n");
+        bonus_failed++;
+    }
+    printf("list size: %d\n", size);
+    printf("ft_list_size: %d\033[0m\n\n", ret);
+
+}
+
+void test_bonus(int *test_count, int *test_failed)
+{
+        // test atoi_base
         test_atoi_base_10("42");
         test_atoi_base_10("0");
         test_atoi_base_10("1");
@@ -57,6 +106,17 @@ void test_bonus(void)
         test_atoi_base("123", "0123456789+", 0);
         test_atoi_base("123", "0123456789\n", 0);
 
+        // test list_push_front
+        t_list *list = NULL;
+        test_list_push_front(&list);
+        test_list_push_front(&list);
+        test_list_push_front(&list);
 
-        return 0;
+        // test list_size
+        test_list_size(list);
+        test_list_size(NULL);
+        
+
+        *test_count += bonus_test_count;
+        *test_failed += bonus_failed;
 }

@@ -9,40 +9,39 @@ endstruc
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 
-section .bss
-    aBss:  resw    1
-
-    pStru:  resq    1
-
-    zBss:   resd    1
-
 section .text
     global ft_list_push_front
     extern malloc
     extern __errno_location
 
+;   Inputs: rdi - **begin_list
+;           rsi - *data  
 ft_list_push_front:
-                PUSH    rbx
-                PUSH    r12
-                PUSH    r13
-                MOV     rbx, rdi
-                MOV     r12, rsi
+                PUSH    rdi                         ; begin
+                PUSH    rsi                         ; data
 
-                MOV     rax, 16
-                CALL    malloc wrt ..plt
-                MOV     r13, rax
+.malloc_list:
+                MOV     rdi, 16                     ; sizeof(t_list) 16UL
+                XOR     rax, rax
+                CALL    malloc wrt ..plt            ; malloc(16)
+                POP     rsi
+                POP     rdi
+                TEST    rax, rax                    ; if (!elem)
+                JZ     .call_errno                      ;   set errno
 
-
+.set_data:
+                MOV     [rax], rsi                  ; elem->data = data
+                MOV     rcx, [rdi]
+                MOV     [rax + 8], rcx              ; elem->next = *begin_list
+                MOV     [rdi], rax                    ; *begin_list = elem ?
 
 .call_errno:
+                PUSH    rax
 	            CALL    __errno_location  wrt ..plt ; call __errno_location
 	            MOV     byte [rax], 0               ; set errno
-                TEST    r13, r13
-                JZ      .set_error
+                POP     rsi
+                NEG     r13
+                MOV     [rax], rsi
 
-                MOV     rax, r13
 .return:
-                POP     r13
-                POP     r12
-                POP     rbx
                 RET
