@@ -42,7 +42,7 @@ mov rsi, msg ; second argument
 mov rdx, msg_len ; third argument
 syscall ; call the kernel
 ```
-[Linux System Call Table](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md)
+[Linux System Call Table](https://chromium.googlesource.com/chromiumos/docs/+/HEAD/constants/syscalls.md)
 
 ## Full register table
 
